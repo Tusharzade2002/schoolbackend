@@ -1,6 +1,9 @@
 import express from 'express'
+import cors from 'cors'
  const app=express();
+ 
 app.use(express.json());
+app.use(cors())
 
 const STUDENTS=[
     {rollNo:1,name:"Ram",city:"nagpur"},
@@ -27,18 +30,19 @@ app.get("/students",(req,res)=>{
 })
 
 app.post("/students",(req,res)=>{
-   const {rollNo,name,city} = req.body;
-
+   const { rollNo  ,name ,city } = req.body;
+    // const data =  req.body;
+    // res.json({message : data});
     if(!rollNo){
       return  res.json({
-        success:false,
+        success:true,
         message:"rollNo is Required"
       })
     }
 
     if(!name){
         return  res.json({
-            success:false,
+            success:true,
           message:"name is Required"
          
         })
@@ -46,7 +50,7 @@ app.post("/students",(req,res)=>{
 
       if(!city){
         return  res.json({
-            success:false,
+            success:true,
           message:"city is Required"
           
         })
@@ -54,7 +58,8 @@ app.post("/students",(req,res)=>{
 
       const studentwithRollno=STUDENTS.find((stud)=>{
         if(stud.rollNo==rollNo){
-            return stud
+            // res.status(400).json({message : error}) ;
+            return stud ;
         }
       })
 
@@ -65,17 +70,19 @@ app.post("/students",(req,res)=>{
         })
       } 
    const student={
-    rollNo,
+    rollNo ,
     name,
     city
    }
-
+   console.log(student);
    STUDENTS.push(student);
-  res.json({
-    success:true,
-    message:"student added sucessfully",
-    data:student
-  })
+
+    res.json({
+      success:true,
+      data:student,
+      message:"student added sucessfully"
+      
+    })
 })
 
 app.delete("/students/:rollNo",(req,res)=>{
@@ -104,8 +111,8 @@ app.delete("/students/:rollNo",(req,res)=>{
 })
 
 app.put("/students/:rollNo",(req,res)=>{
-    const {rollNo} =req.params;
-    const {name,city}=req.body;
+    const {rollNo} = req.params;
+    const {name,city} = req.body;
     let StudentIndex =-1;
 
     STUDENTS.map((stud,index)=>{
@@ -122,9 +129,9 @@ app.put("/students/:rollNo",(req,res)=>{
   }
 
    const student={
-    city,
-    rollNo,
     name,
+    rollNo,
+    city,
    }
 
    STUDENTS[StudentIndex]=student;
